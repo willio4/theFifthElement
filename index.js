@@ -10,10 +10,9 @@ function getTodaysDate() {
   return `${month} ${day}, ${year}`;
 }
 
-function generateLLMPrompt({title, description, content}) {
-  console.log(title);
-  console.log(description);
-  console.log(content);
+function generateLLMPrompt(currentArticle) {
+  const prompt = LLMInstructions + JSON.stringify(currentArticle) + 'Treat all sources as potentially incomplete or biased unless independently corroborated. Use reputable, mainstream sources for updates and do not rely on a single outlet. If post-publication updates cannot be confirmed from reliable sources, state that updates are unavailable rather than estimating.';
+  return prompt;
 }
 
 const app = express();
@@ -24,6 +23,7 @@ let currentArticle = {
   title: '',
   description: '',
   content: '',
+  date: '',
 }
 
 app.use(express.static("public"));
@@ -62,9 +62,14 @@ app.get("/article", (req, res) => {
       date,
     }
 
-    console.log(article);
+    currentArticle = {
+      title,
+      description,
+      content,
+      date
+    }
 
-  generateLLMPrompt({title, description, content});
+  LLMPrompt = generateLLMPrompt(currentArticle);
 
   if (!title || !url) return res.status(400).send("Missing article data");
 
@@ -239,3 +244,5 @@ app.get("/results", async (req, res) => {
 app.listen(port, () => {
   console.log(`listening to port: ${port}`);
 });
+
+const LLMInstructions = 'You are a neutral analytical reporting system. Input provided:- Title- Description- Partial article content- Original publication date Task:Generate an unbiased factual report about the topic. Rules:- Do not express opinions or value judgments.- Do not speculate or infer intent.- Clearly separate verified facts from claims or interpretations.- Explicitly state when information is missing or unclear due to partial content.- Identify notable developments, corrections, or updates that occurred after the publication date.- If no reliable updates are known, explicitly say so.- Use precise, neutral language and avoid emotionally loaded wording.- Do not assume the original article is accurate or complete. Output format (strict):Overview:Key Facts:Claims and Perspectives:Unknown or Unclear Information:Updates Since Publication:Contextual Notes (optional, only if necessary): If information cannot be verified, label it accordingly. ';
