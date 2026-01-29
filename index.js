@@ -21,7 +21,7 @@ function getTodaysDate() {
   const dayofWeek = weekday[new Date().getDay()];
   const day = new Date().getDate();
   const year = new Date().getFullYear();
-  return `${dayofWeek},${month} ${day}, ${year}`;
+  return `${dayofWeek}, ${month} ${day}, ${year}`;
 }
 
 const app = express();
@@ -48,8 +48,8 @@ app.get("/", async (req, res) => {
 
   const politics = await axios.get(newsWebsiteEverything, {
   params: {
-    q: "politics",
-    sortBy: "popularity",
+    q: "politics OR government",
+    sortBy: "relevancy",
     apiKey: apiKey,
     language: "en",
     pageSize: 10,
@@ -58,11 +58,31 @@ app.get("/", async (req, res) => {
 
 const fashion = await axios.get(newsWebsiteEverything, {
   params: {
-    q: "fashion",
-    sortBy: "popularity",
+    q: "fashion OR clothes",
+    sortBy: "relevancy",
     apiKey: apiKey,
     language: "en",
     pageSize: 10,
+  },
+});
+
+const nba = await axios.get(newsWebsiteEverything, {
+  params: {
+    q: "nba OR NBA OR basketball",
+    language: "en",
+    sortBy: "publishedAt",
+    apiKey: apiKey,
+    pageSize: 4,
+  },
+});
+
+const nfl = await axios.get(newsWebsiteEverything, {
+  params: {
+    q: "NFL",
+    language: "en",
+    sortBy: "relevancy",
+    apiKey: apiKey,
+    pageSize: 4,
   },
 });
 
@@ -82,6 +102,8 @@ const fashion = await axios.get(newsWebsiteEverything, {
     politics: politics.data.articles,
     fashion: fashion.data.articles,
     tech: tech.data.articles,
+    nfl: nfl.data.articles,
+    nba: nba.data.articles,
     year: new Date().getFullYear()
   });
 });
@@ -98,7 +120,7 @@ app.get("/article", (req, res) => {
     publishedAt,
   } = req.query;
 
-  if (!title || !url || !content) {
+  if (!title || !url) {
     return res.status(400).send("Missing article data");
   }
 
@@ -122,11 +144,13 @@ app.get("/article", (req, res) => {
     partialContent: content,
     publicationDate: date,
   };
+  const aiAnalysis = null;
 
   res.render("article.ejs", {
     article,
     date: getTodaysDate(),
     year: new Date().getFullYear(),
+    aiContent: aiAnalysis,
   });
 });
 
@@ -144,7 +168,7 @@ Publication Date: ${currentArticle.publicationDate}
 
   try {
     const response = await client.chat.completions.create({
-      model: "gpt-5-mini", // more reliable than nano
+      model: "gpt-5-mini",
       messages: [
         { role: "system", content: LLMInstructions },
         { role: "user", content: userMessage },
