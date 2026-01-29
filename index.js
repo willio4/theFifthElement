@@ -179,6 +179,10 @@ Publication Date: ${currentArticle.publicationDate}
     });
 
     const report = response.choices[0].message.content;
+    console.log("\n\n\nHere is message:\n")
+    console.log(`${response.choices[0].message}\n\n\n`)
+    console.log("Here is content:\n")
+    console.log(`${report}\n\n\n`)
 
     res.json({ text: report });
   } catch (err) {
