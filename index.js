@@ -52,23 +52,22 @@ app.get("/", async (req, res) => {
     sortBy: "relevancy",
     apiKey: apiKey,
     language: "en",
-    pageSize: 10,
+    pageSize: 8,
   },
 });
 
 const fashion = await axios.get(newsWebsiteEverything, {
   params: {
-    q: "fashion OR clothes",
-    sortBy: "relevancy",
-    apiKey: apiKey,
+    q: '"fashion industry" OR "fashion trends" OR "high fashion" OR "fashion designers"',
     language: "en",
-    pageSize: 10,
+    apiKey: apiKey,
+    pageSize: 8,
   },
 });
 
 const nba = await axios.get(newsWebsiteEverything, {
   params: {
-    q: "nba OR NBA OR basketball",
+    q: 'nba OR basketball',
     language: "en",
     sortBy: "publishedAt",
     apiKey: apiKey,
@@ -78,9 +77,9 @@ const nba = await axios.get(newsWebsiteEverything, {
 
 const nfl = await axios.get(newsWebsiteEverything, {
   params: {
-    q: "NFL",
+    q: 'nfl OR football',
     language: "en",
-    sortBy: "relevancy",
+    sortBy: "publishedAt",
     apiKey: apiKey,
     pageSize: 4,
   },
@@ -93,6 +92,7 @@ const nfl = await axios.get(newsWebsiteEverything, {
       category: "technology",
       sources: "",
       q: "",
+      pageSize: 8,
     },
   });
 
@@ -371,7 +371,7 @@ Input:
 
 Task:
 Generate an unbiased, factual report about the topic. Make it **easy to read**, using:
-- Short paragraphs (2–3 sentences each)
+- Short paragraphs (2-3 sentences each)
 - Clear headings
 - Bullet points for key facts, statements, and missing info
 - Optional plain-language summary lines to highlight main ideas
@@ -383,6 +383,7 @@ Rules:
 - Explicitly note missing or unclear information
 - Include a section for updates since publication if known; otherwise, advise to check primary sources
 - Keep language concise and accessible to a general reader
+- Do not suggest or offer any follow-up tasks
 
 Output format (strict):
 What Happened:
