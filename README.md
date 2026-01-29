@@ -1,5 +1,5 @@
 AI-Powered News Aggregator & Analysis Platform\
-Full-Stack Web Application | Tech: Node.js, Express, EJS, Tailwind CSS, OpenAI API\
+Full-Stack Web Application | Tech: Node.js, Express, EJS, Tailwind CSS, OpenAI API
 
 Overview\
 A full-featured news aggregation platform that fetches real-time headlines from multiple categories and provides AI-driven summaries and analysis. The project showcases integration of public APIs, server-rendered templates, responsive design, and real-time AI functionality.
