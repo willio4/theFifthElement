@@ -12,8 +12,27 @@ const sportsSources = [
   "bleacher-report",
   "sports-illustrated",
   "cbssports",
-  "fox-sports",
   "nbcsports"
+].join(",");
+
+const fashionSources = [
+  "the-cut",
+  "business-insider",
+  "wired",
+  "bbc-news",
+  "the-guardian-uk",
+  "fortune"
+].join(",");
+
+const politicsSources = [
+  "reuters",
+  "associated-press",
+  "bbc-news",
+  "the-guardian-uk",
+  "politico",
+  "axios",
+  "the-washington-post",
+  "the-new-york-times"
 ].join(",");
 
 function getTodaysDate() {
@@ -85,9 +104,14 @@ app.get("/", async (req, res) => {
     fetchWithCache("politics", async () => {
       const r = await axios.get(newsWebsiteEverything, {
         params: {
-          q: "politics OR government",
+          sources: politicsSources,
+          q: `politics OR government OR ice OR trump OR
+              election OR bill OR court OR ruling OR
+              supreme court OR congress OR senate OR house OR
+              investigation OR impeachment OR indictment OR
+              executive order OR regulation`,
           language: "en",
-          sortBy: "relevancy",
+          sortBy: "publihsedAt",
           apiKey,
           pageSize: 8
         }
@@ -98,8 +122,10 @@ app.get("/", async (req, res) => {
     fetchWithCache("fashion", async () => {
       const r = await axios.get(newsWebsiteEverything, {
         params: {
-          q: '"fashion industry" OR "fashion trends" OR "high fashion"',
+          sources: fashionSources,
+          q: "fashion OR runway OR designer OR apparel",
           language: "en",
+          sortBy: "publishedAt",
           apiKey,
           pageSize: 8
         }
@@ -122,7 +148,8 @@ app.get("/", async (req, res) => {
     fetchWithCache("nba", async () => {
       const r = await axios.get(newsWebsiteEverything, {
         params: {
-          q: "nba -bonus -promo -sportsbook -casino -gambling -ncaa -college",
+          q: `nba OR basketball OR "college basketball" -football
+              -tennis -golf -nascar -baseball -indy -soccer`,
           sources: sportsSources,
           language: "en",
           sortBy: "publishedAt",
@@ -136,7 +163,8 @@ app.get("/", async (req, res) => {
     fetchWithCache("nfl", async () => {
       const r = await axios.get(newsWebsiteEverything, {
         params: {
-          q: "nfl -bonus -promo -sportsbook -casino -gambling -ncaa -college",
+          q: `nfl OR "college football" OR football -basketball
+              -tennis -golf -nascar -baseball -indy -soccer`,
           sources: sportsSources,
           language: "en",
           sortBy: "publishedAt",
